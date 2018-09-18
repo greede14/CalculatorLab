@@ -31,14 +31,20 @@ namespace CPE200Lab1
                         return "E";
                     }
                     else
-                    {
+                  {
+                        try
+                        {
+                            secondoperand = numbers.Pop();
+                            firstoperand = numbers.Pop();
+                            
+                            temp = calculate(parts[i], firstoperand, secondoperand);
+                            numbers.Push(temp);
+                        } catch(Exception ex)
+                        {
+                            return "WRONGGGGGG";
+                        }
 
-                        secondoperand = numbers.Pop();
-                        firstoperand = numbers.Pop();
-                        temp = calculate(parts[i], firstoperand, secondoperand);
-                        numbers.Push(temp);
-
-                    }
+                    } 
 
                 }
             }
