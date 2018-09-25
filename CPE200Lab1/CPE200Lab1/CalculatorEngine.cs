@@ -45,7 +45,7 @@ namespace CPE200Lab1
             {
                 
                 Console.WriteLine(ex);
-                return "fhxfghxfgh";
+                return "wrong";
             }
             
        
