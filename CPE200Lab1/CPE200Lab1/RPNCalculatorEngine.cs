@@ -8,46 +8,67 @@ namespace CPE200Lab1
 {
     public class RPNCalculatorEngine : CalculatorEngine
     {
-        public string Process(string str)
+        Stack<string> myStack = new Stack<string>();
+        public string calculate(string oper)
         {
-            string firstoperand;
-            string secondoperand;
-            string[] parts = str.Split(' ');
-            string temp ;
-            int i = 0;
-            Stack<string> numbers = new Stack<string>();
-            for ( i = 0; i < parts.Length; i++)
+            myStack = new Stack<string>();
+            string[] numSet = oper.Split(' ');
+            string firstOperand, secondOperand;
+            foreach (string numOP in numSet)
             {
-                if (isNumber(parts[i]) == true)
+                if (isNumber(numOP))
                 {
-                    numbers.Push(parts[i]);
-
+                    myStack.Push(numOP);
                 }
-                if (isOperator(parts[i])==true)
-                {
 
-                    if (numbers.Count < 2)
+                else
+                {
+                    if (numOP == "-" || numOP == "+" || numOP == "X" || numOP == "÷" || numOP == "%")
+                    {
+                        if (myStack.Count >= 2)
+                        {
+                            secondOperand = myStack.Peek();
+                            myStack.Pop();
+                            firstOperand = myStack.Peek();
+                            myStack.Pop();
+                            if (numOP == "%")
+                            {
+                                myStack.Push(firstOperand);
+                            }
+                            myStack.Push(calculate(numOP, firstOperand, secondOperand));
+                        }
+                        else
+                        {
+                            return "E";
+                        }
+                    }
+
+                    else if (numOP == "√" || numOP == "1/x")
+                    {
+                        if (myStack.Count >= 1)
+                        {
+                            string num = myStack.Pop();
+                            myStack.Push(calculate(numOP, num));
+                        }
+                        else
+                        {
+                            return "E";
+                        }
+                    }
+
+                    else
                     {
                         return "E";
                     }
-                    else
-                    {
-
-                        secondoperand = numbers.Pop();
-                        firstoperand = numbers.Pop();
-                        temp = calculate(parts[i], firstoperand, secondoperand);
-                        numbers.Push(temp);
-
-                    }
-
                 }
             }
-            // your code here
-            if (numbers.Count == 1)
+
+            if (myStack.Count > 1)
             {
-                return numbers.Pop();
+                return "E";
             }
-            else return "E";
+
+            return myStack.Peek();
         }
     }
 }
