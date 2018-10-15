@@ -15,7 +15,8 @@ namespace CPE200Lab1
         private bool isNumberPart = false;
         private bool isContainDot = false;
         private bool isSpaceAllowed = false;
-        private CalculatorEngine engine;
+        private string memoryNumber = "0";
+        private RPNCalculatorEngine engine;
 
         public ExtendForm()
         {
@@ -25,7 +26,8 @@ namespace CPE200Lab1
 
         private bool isOperator(char ch)
         {
-            switch(ch) {
+            switch (ch)
+            {
                 case '+':
                 case '-':
                 case 'X':
@@ -81,7 +83,8 @@ namespace CPE200Lab1
             if (current[current.Length - 1] is ' ' && current.Length > 2 && isOperator(current[current.Length - 2]))
             {
                 lblDisplay.Text = current.Substring(0, current.Length - 3);
-            } else
+            }
+            else
             {
                 lblDisplay.Text = current.Substring(0, current.Length - 1);
             }
@@ -101,12 +104,12 @@ namespace CPE200Lab1
 
         private void btnEqual_Click(object sender, EventArgs e)
         {
-
             string result = engine.Process(lblDisplay.Text);
             if (result is "E")
             {
                 lblDisplay.Text = "Error";
-            } else
+            }
+            else
             {
                 lblDisplay.Text = result;
             }
@@ -126,14 +129,16 @@ namespace CPE200Lab1
             if (current is "0")
             {
                 lblDisplay.Text = "-";
-            } else if (current[current.Length - 1] is '-')
+            }
+            else if (current[current.Length - 1] is '-')
             {
                 lblDisplay.Text = current.Substring(0, current.Length - 1);
                 if (lblDisplay.Text is "")
                 {
                     lblDisplay.Text = "0";
                 }
-            } else
+            }
+            else
             {
                 lblDisplay.Text = current + "-";
             }
@@ -146,7 +151,7 @@ namespace CPE200Lab1
             {
                 return;
             }
-            if(!isContainDot)
+            if (!isContainDot)
             {
                 isContainDot = true;
                 lblDisplay.Text += ".";
@@ -156,14 +161,67 @@ namespace CPE200Lab1
 
         private void btnSpace_Click(object sender, EventArgs e)
         {
-            if(lblDisplay.Text is "Error")
+            if (lblDisplay.Text is "Error")
             {
                 return;
             }
-            if(isSpaceAllowed)
+            if (isSpaceAllowed)
             {
                 lblDisplay.Text += " ";
                 isSpaceAllowed = false;
+                isContainDot = false;
+            }
+        }
+        private void buttonUnary_Click(object sender, EventArgs e)
+        {
+            string operateU = ((Button)sender).Text;
+            string result = engine.ProcessUnary(operateU, lblDisplay.Text);
+            if (result is "E")
+            {
+                lblDisplay.Text = "Error";
+            }
+            else
+            {
+                lblDisplay.Text = result;
+            }
+        }
+        private void buttonPercent_Click(object sender, EventArgs e)
+        {
+            string operate = ((Button)sender).Text;
+            string result = engine.ProcessPercent(lblDisplay.Text);
+            if (result is "E")
+            {
+                lblDisplay.Text = "Error";
+            }
+            else
+            {
+                lblDisplay.Text = result;
+            }
+
+        }
+
+        private void buttonMemory_Click(object sender, EventArgs e)
+        {
+            string operate = ((Button)sender).Text;
+            string result = engine.ProcessMemory(operate, lblDisplay.Text, memoryNumber);
+            memoryNumber = result;
+            if (operate == "MR")
+            {
+                if (lblDisplay.Text is "Error")
+                {
+                    return;
+                }
+                if (lblDisplay.Text is "0")
+                {
+                    lblDisplay.Text = "";
+                }
+                if (!isNumberPart)
+                {
+                    isNumberPart = true;
+                    isContainDot = false;
+                }
+                lblDisplay.Text += memoryNumber;
+                isSpaceAllowed = true;
             }
         }
     }
